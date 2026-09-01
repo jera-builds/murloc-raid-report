@@ -1,0 +1,63 @@
+# =====================================================================
+# THIS REPOSITORY IS PUBLIC. GitHub Pages serves it, which on the free
+# plan requires public. Anything committed here is world-readable and
+# stays in the history forever, even if deleted in a later commit.
+#
+# Only the site itself is tracked: index.html, season1.html,
+# readiness.html. Everything else below lives on disk but is deliberately
+# kept out of git, so that a stray `git add -A` cannot publish it.
+#
+# To version this material, put it in a SEPARATE PRIVATE repo. Do not
+# un-ignore it here.
+# =====================================================================
+
+# Team-facing analysis. Names real raiders and judges their play:
+# individual coaching plans, per-player critiques, roster commentary.
+docs/
+data/
+
+# Working code. Nothing secret, but it belongs with the data it reads
+# and there is no reason to publish it from the Pages repo.
+pipeline/
+bot/
+addon/
+.github/
+
+# Project instructions and repo readme for the working copy.
+CLAUDE.md
+README.md
+
+# ---------------------------------------------------------------------
+# Always-ignore, regardless of the above.
+# ---------------------------------------------------------------------
+
+# Secrets.
+.env
+.env.*
+!.env.example
+*.secret
+wcl-credentials*
+
+# Python.
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Scratch.
+scratch/
+tmp/
+*.tmp
+*.zip
+
+# OS.
+Thumbs.db
+desktop.ini
+.DS_Store
+
+# The Claude desktop app syncs project docs down into this folder.
+# It must never be committed to a public repo.
+/claude/
+
+# Bot config template — belongs with bot/, not the public site repo.
+.env.example

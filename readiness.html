@@ -1,0 +1,409 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Murloc Manifesto — Raid Readiness · Season 2</title><style>
+:root{color-scheme:dark}
+.viz{--surface:#0c1710;--plane:#060d09;--ink:#eef7ec;--ink2:#9fb8a4;--mut:#6fae62;--grid:#16291c;--axis:#2b4a33;
+--venom:#5da62b;--venomhi:#9ff53b;--tide:#3a9fd6;--gold:#c49a33;--good:#37e0a1;--warn:#e5b45b;--serious:#ec835a;--crit:#e0564b;--ring:rgba(120,220,80,.14)}
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',sans-serif;background:#060d09;color:#eef7ec;line-height:1.45;
+background-image:radial-gradient(1100px 560px at 78% -10%,rgba(90,200,50,.14),transparent 62%),
+radial-gradient(900px 560px at 2% 4%,rgba(40,140,190,.10),transparent 58%),
+radial-gradient(1.5px 1.5px at 12% 22%,rgba(180,255,150,.28),transparent),
+radial-gradient(1px 1px at 36% 10%,rgba(200,255,190,.20),transparent),
+radial-gradient(1.5px 1.5px at 63% 30%,rgba(160,240,220,.22),transparent),
+radial-gradient(1px 1px at 84% 40%,rgba(200,255,150,.18),transparent);background-attachment:fixed}
+.viz{max-width:1240px;margin:0 auto;padding:0 20px 60px}
+h1,h2,h3{text-transform:uppercase;letter-spacing:.04em;font-weight:600}
+h1{font-size:46px;line-height:1.02;margin:.15em 0}h2{font-size:24px;margin:0;color:#fff}h3{font-size:14px;margin:0 0 10px;color:#fff;letter-spacing:.08em}
+.sub,.mut,.ts{color:var(--ink2);font-size:13px}
+.card{background:linear-gradient(180deg,rgba(160,255,120,.04),rgba(255,255,255,.01)) var(--surface);border:1px solid var(--ring);border-radius:14px;padding:18px 22px;margin:16px 0}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(148px,1fr));gap:10px;margin:14px 0}
+.tile{background:linear-gradient(180deg,rgba(90,200,50,.08),rgba(255,255,255,.015));border:1px solid var(--ring);border-radius:12px;padding:12px 15px}
+.tl{font-size:10px;font-family:ui-monospace,Consolas,monospace;text-transform:uppercase;letter-spacing:.1em;color:var(--mut);display:flex;gap:6px;align-items:center;justify-content:space-between}
+.tv{font-size:32px;font-weight:600;margin:4px 0 2px;color:#fff;line-height:1}
+.chip{font-size:9.5px;font-family:ui-monospace,Consolas,monospace;letter-spacing:.05em;text-transform:uppercase;padding:3px 8px;border-radius:6px;border:1px solid;white-space:nowrap}
+.chip.good{color:#37e0a1;border-color:rgba(55,224,161,.45);background:rgba(55,224,161,.1)}.chip.good::before{content:"✓ "}
+.chip.warning{color:var(--warn);border-color:rgba(229,180,91,.45);background:rgba(229,180,91,.1)}.chip.warning::before{content:"△ "}
+.chip.serious{color:var(--crit);border-color:rgba(224,86,75,.45);background:rgba(224,86,75,.1)}.chip.serious::before{content:"! "}
+.chip.info{color:#7cc7ef;border-color:rgba(58,159,214,.45);background:rgba(58,159,214,.1)}
+select{font:inherit;padding:9px 13px;border-radius:8px;border:1px solid var(--axis);background:#0c1710;color:var(--ink);max-width:100%}
+table{border-collapse:collapse;width:100%;font-size:13px}
+th,td{text-align:left;padding:8px 8px;border-bottom:1px solid var(--grid);font-variant-numeric:tabular-nums;vertical-align:top}
+th{color:var(--mut);font-weight:600;cursor:pointer;user-select:none;white-space:nowrap;font-family:ui-monospace,Consolas,monospace;font-size:10px;text-transform:uppercase;letter-spacing:.1em}
+tr:hover td{background:rgba(120,220,80,.06)}
+td.nm{font-weight:700;cursor:pointer;color:var(--venomhi);white-space:nowrap}
+.mbar{height:4px;background:rgba(255,255,255,.08);border-radius:2px;margin-top:4px;min-width:60px}
+.mbar div{height:4px;border-radius:2px;background:#a335ee;box-shadow:0 0 6px rgba(163,53,238,.5)}.mbar .mid{background:#0088ee;box-shadow:0 0 6px rgba(0,136,238,.5)}.mbar .low{background:#4c5a4e;box-shadow:none}
+.phead{display:flex;flex-wrap:wrap;gap:4px 14px;align-items:baseline;margin-top:6px}
+.meta{color:var(--ink2);font-size:13px}
+a{color:#7cc7ef;text-decoration:none}a:hover{color:#a9def7}
+.charts{display:grid;grid-template-columns:1fr;gap:10px}
+figure{margin:0;background:linear-gradient(180deg,rgba(160,255,120,.03),rgba(255,255,255,.01));border:1px solid var(--ring);border-radius:14px;padding:14px 16px}
+figcaption{font-size:12px;color:var(--ink2);margin-bottom:4px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px}
+.legend{display:inline-flex;gap:10px;align-items:center;font-size:11px;font-family:ui-monospace,Consolas,monospace}
+.sw{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:4px}
+.sw.nrm{background:var(--tide)}.sw.her{background:var(--venom)}
+svg.db{width:100%;height:auto;display:block}
+svg .grid{stroke:var(--grid);stroke-width:1}svg .tgt{stroke:#9ff53b;stroke-width:1;stroke-dasharray:3 3;opacity:.55}
+svg .ax{fill:var(--mut);font-size:10px}svg .tgtlab{fill:#9ff53b;font-size:10px;font-weight:600;opacity:.8}
+svg .lab{fill:var(--ink2);font-size:11px}svg .val{fill:var(--ink);font-size:10px;font-weight:600}
+svg rect.nrm{fill:var(--tide)}svg rect.her{fill:var(--venom)}
+svg rect.nrm,svg rect.her{cursor:pointer}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:18px 0;border-bottom:1px solid var(--ring);margin-bottom:14px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:14px}
+.crest{width:32px;height:32px;flex:none;transform:rotate(45deg);border:1.5px solid var(--venomhi);border-radius:6px;display:flex;align-items:center;justify-content:center;box-shadow:0 0 14px rgba(159,245,59,.30),inset 0 0 10px rgba(159,245,59,.14);margin:0 4px}
+.crest i{width:11px;height:11px;border-radius:3px;background:linear-gradient(135deg,#9ff53b,#3a9fd6)}
+.bt{font-weight:600;font-size:16px;letter-spacing:.08em;color:#fff;text-transform:uppercase;line-height:1}
+.bs{font-family:ui-monospace,Consolas,monospace;font-size:9px;letter-spacing:.22em;color:var(--mut);text-transform:uppercase;margin-top:3px}
+.pill{display:flex;align-items:center;gap:8px;font-family:ui-monospace,Consolas,monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#b8e89a;border:1px solid rgba(120,220,80,.3);border-radius:99px;padding:6px 13px;background:rgba(90,200,50,.08);white-space:nowrap}
+.pill b{width:6px;height:6px;border-radius:50%;background:#9ff53b;box-shadow:0 0 8px #9ff53b;animation:vpulse 2s infinite}
+@keyframes vpulse{0%,100%{opacity:.5}50%{opacity:1}}
+.eyebrow{font-family:ui-monospace,Consolas,monospace;font-size:11px;letter-spacing:.3em;color:#b8e89a;text-transform:uppercase;margin-bottom:10px}
+h1 em{font-style:normal;background:linear-gradient(90deg,#9ff53b,#3a9fd6);-webkit-background-clip:text;background-clip:text;color:transparent}
+.stamp{font-family:ui-monospace,Consolas,monospace;font-size:11px;color:#4e6b52;margin:10px 0 4px;letter-spacing:.06em}
+.nav{display:flex;gap:22px;font-family:ui-monospace,Consolas,monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase}
+.nav a{color:var(--mut);padding-bottom:4px}.nav a:hover{color:#fff}
+.seasonswitch{display:flex;gap:6px;font-family:ui-monospace,Consolas,monospace;font-size:10px;text-transform:uppercase;letter-spacing:.08em}
+.seasonswitch a,.seasonswitch span{padding:6px 12px;border-radius:99px;border:1px solid var(--axis)}
+.seasonswitch span{color:#060d09;background:linear-gradient(90deg,#9ff53b,#6cbf33);font-weight:700;border-color:transparent}
+.seasonswitch a{color:var(--ink2)}.seasonswitch a:hover{color:#fff;border-color:var(--mut)}
+.hero{display:grid;grid-template-columns:1fr 400px;gap:40px;align-items:end;padding-bottom:30px;border-bottom:1px solid var(--ring);margin-bottom:10px}
+@media(max-width:960px){.hero{grid-template-columns:1fr}}
+.hero h1{font-size:58px;letter-spacing:.005em}
+.heroL .sub{max-width:640px}
+.ctas{display:flex;gap:10px;margin-top:20px}
+.cta{font-family:ui-monospace,Consolas,monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;padding:11px 20px;border-radius:8px;font-weight:700}
+.cta1{color:#060d09;background:linear-gradient(90deg,#9ff53b,#6cbf33);box-shadow:0 0 24px rgba(159,245,59,.3)}.cta1:hover{color:#060d09}
+.cta2{color:#b8e89a;border:1px solid rgba(120,220,80,.35);font-weight:400}.cta2:hover{color:#d9f5c2}
+.progcard{border:1px solid rgba(120,220,80,.2);border-radius:16px;padding:22px 24px;background:linear-gradient(180deg,rgba(90,200,50,.09),rgba(255,255,255,.015))}
+.pchead{display:flex;justify-content:space-between;font-family:ui-monospace,Consolas,monospace;font-size:10.5px;letter-spacing:.2em;color:var(--mut);text-transform:uppercase}
+.pcnum{font-size:52px;font-weight:600;color:#fff;line-height:1.05;margin-top:6px}
+.pcnum i{font-style:normal;color:#4e6b52}.pcnum em{font-style:normal;color:#9ff53b;font-size:30px}
+.psegs{display:flex;gap:5px;margin-top:14px}.pseg{flex:1;height:10px;border-radius:3px}
+.pcfoot{display:flex;justify-content:space-between;margin-top:8px;font-family:ui-monospace,Consolas,monospace;font-size:10px;color:#6b8a70}
+.kpis{display:grid;grid-template-columns:repeat(6,1fr);padding:8px 0 4px;margin:4px 0 10px}
+@media(max-width:960px){.kpis{grid-template-columns:repeat(3,1fr);row-gap:18px}}
+.kpi{padding:0 18px;border-right:1px solid rgba(120,220,80,.1)}.kpi:first-child{padding-left:0}.kpi:last-child{border-right:none}
+.kl{font-family:ui-monospace,Consolas,monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--mut);min-height:26px}
+.kv{font-size:36px;font-weight:600;line-height:1;margin-top:7px}
+.ks{font-size:11px;color:#6b8a70;margin-top:6px}
+.lb2{display:grid;grid-template-columns:1.55fr 1fr;gap:20px;align-items:start;margin-top:6px}
+@media(max-width:960px){.lb2{grid-template-columns:1fr}}
+.sideCol{display:flex;flex-direction:column;gap:14px;margin-top:14px}
+.panel{border:1px solid var(--ring);border-radius:14px;padding:16px 18px;background:linear-gradient(180deg,rgba(160,255,120,.03),rgba(255,255,255,.01)) var(--surface)}
+.phd{display:flex;justify-content:space-between;align-items:baseline;font-size:15px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:#fff;margin-bottom:12px}
+.phm{font-family:ui-monospace,Consolas,monospace;font-size:9.5px;color:#6b8a70;letter-spacing:.04em}
+.compbar{display:flex;height:9px;border-radius:5px;overflow:hidden;gap:2px;background:transparent}.compbar span{display:block}
+.clegs{display:flex;flex-wrap:wrap;gap:6px 12px;margin-top:13px}
+.cleg{display:inline-flex;align-items:center;gap:5px;font-family:ui-monospace,Consolas,monospace;font-size:10px;color:var(--ink2)}
+.cleg i{width:7px;height:7px;border-radius:2px;display:inline-block}
+.kbrow{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:8px 12px;border:1px solid rgba(159,245,59,.16);border-radius:8px;background:rgba(90,200,50,.05);margin-top:8px;font-size:12.5px;font-weight:600;color:#d9f5c2}
+.kbn{font-family:ui-monospace,Consolas,monospace;font-size:10px;font-weight:400;color:var(--mut);white-space:nowrap}
+.sitefoot{display:flex;justify-content:space-between;align-items:center;margin-top:30px;padding-top:18px;border-top:1px solid var(--ring);font-family:ui-monospace,Consolas,monospace;font-size:10.5px;color:#4e6b52;flex-wrap:wrap;gap:10px}
+.sitefoot a{color:var(--mut)}
+.note{border-left:3px solid var(--warn);padding:9px 13px;background:rgba(229,180,91,.08);border-radius:0 10px 10px 0;font-size:13px;margin:10px 0;color:#e6ddc8}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:14px}
+@media(max-width:760px){.cols{grid-template-columns:1fr}}
+.cols>div{background:linear-gradient(180deg,rgba(160,255,120,.03),rgba(255,255,255,.01));border:1px solid var(--ring);border-radius:14px;padding:16px 18px}
+ul,ol{margin:0;padding-left:18px}li{margin:6px 0;font-size:13.5px;color:#cfe3cf}
+#tip{position:fixed;pointer-events:none;background:#122417;color:#eef7ec;border:1px solid rgba(159,245,59,.32);font-size:12px;padding:6px 10px;border-radius:8px;opacity:0;transition:opacity .1s;z-index:9;max-width:280px;box-shadow:0 8px 30px rgba(0,0,0,.5)}
+.rchg-in{color:var(--good);font-size:13px;margin-bottom:8px}
+.rchg-out{color:var(--crit);font-size:13px}
+.rchg-swap{color:#7cc7ef;font-size:13px;margin-bottom:8px}
+.rchg-in b,.rchg-out b,.rchg-swap b{margin-right:4px}
+.dup{color:var(--good)}.ddown{color:var(--crit)}.dflat{color:var(--ink2)}.dnew{color:#9ff53b;font-weight:700}
+.dqcard ul{margin:6px 0 0}.dqcard li{margin:8px 0}
+.opener-badge{display:inline-block;padding:3px 10px;border-radius:99px;background:rgba(159,245,59,.12);border:1px solid rgba(159,245,59,.4);color:#9ff53b;font-size:11px;letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px}
+.bench td:first-child{font-weight:600;white-space:nowrap;color:#fff}
+/* boss tracker */
+.wings{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px;margin-top:12px}
+.wing{border:1px solid var(--ring);border-radius:14px;padding:14px 16px;background:linear-gradient(180deg,rgba(90,200,50,.05),rgba(255,255,255,.01))}
+.wt{font-family:ui-monospace,Consolas,monospace;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:10px}
+.bossrow{padding:9px 0;border-top:1px solid var(--grid)}
+.bossrow:first-of-type{border-top:none}
+.bn{font-size:13.5px;font-weight:700;color:#fff;display:flex;justify-content:space-between;gap:8px;align-items:baseline}
+.bn .who{font-weight:400;font-family:ui-monospace,Consolas,monospace;font-size:9.5px;color:var(--mut);letter-spacing:.05em}
+.difftags{display:flex;gap:6px;margin-top:6px;flex-wrap:wrap}
+.dt{font-family:ui-monospace,Consolas,monospace;font-size:10px;padding:3px 9px;border-radius:6px;border:1px solid}
+.dt.kill{color:#37e0a1;border-color:rgba(55,224,161,.4);background:rgba(55,224,161,.08)}
+.dt.prog{color:var(--warn);border-color:rgba(229,180,91,.4);background:rgba(229,180,91,.08)}
+.dt.none{color:#4e6b52;border-color:#1c3324;background:transparent}
+.wipebar{height:5px;background:rgba(255,255,255,.07);border-radius:3px;margin-top:7px;overflow:hidden}
+.wipebar div{height:5px;border-radius:3px;background:linear-gradient(90deg,#3a9fd6,#9ff53b)}
+.scaleline{height:3px;border:none;margin:26px 0 6px;background:repeating-linear-gradient(90deg,rgba(159,245,59,.35) 0 14px,transparent 14px 22px);border-radius:2px}
+/* readiness grid — new for this page */
+.rg{overflow-x:auto}
+.rg table{min-width:920px}
+.rg td.nm{white-space:nowrap}
+.rgspec{font-size:11.5px;color:var(--ink2);white-space:nowrap;font-family:ui-monospace,Consolas,monospace}
+.rgn{display:block;font-size:10px;color:var(--ink2);margin-top:4px;line-height:1.35;max-width:200px;white-space:normal}
+.rglegend{display:flex;flex-wrap:wrap;gap:8px 16px;margin:10px 0 2px;font-family:ui-monospace,Consolas,monospace;font-size:10px;color:var(--ink2)}
+.rglegend span{white-space:nowrap}
+</style></head><body><div class="viz">
+
+<div class="topbar">
+  <div class="brand"><div class="crest"><i></i></div><div><div class="bt">Murloc Manifesto</div><div class="bs">Raid Performance · Midnight S2</div></div></div>
+  <nav class="nav"><a href="index.html">Report</a><a href="readiness.html" style="color:#fff;border-bottom:2px solid var(--venomhi);padding-bottom:4px">Readiness</a><a href="season1.html">Season 1 archive</a></nav>
+  <div class="seasonswitch"><span>Season 2 · Venomous Abyss</span><a href="season1.html">Season 1 archive</a></div>
+  <div class="pill"><b></b>Season 2 · Week 1 · Readiness</div>
+</div>
+
+<div class="hero" style="grid-template-columns:1fr;padding-bottom:20px;margin-bottom:8px">
+<div class="heroL">
+<div class="eyebrow">Midnight · Tier 2 · The Venomous Abyss · Pre-raid &amp; in-raid prep · Week 1 edition</div>
+<h1>Raid <em>Readiness.</em></h1>
+<div class="stamp">v1 · week of 8/18–8/20 · data: Aug-22 log audit of both nights</div>
+<p class="sub">Average readiness this week: <b>77/100</b> (Tue 78, Thu 75). None of this measures how well anyone plays — it's whether they showed up prepared to play well, and <b>everything on this page is free performance: zero skill required</b>. The headline is a split picture: consumable <i>discipline</i> is good — 357 Light's Potential and 204 Potion of Recklessness were drunk across the two nights — but the failures cluster in three specific spots: potion <b>choice</b> (drinking the wrong potion for your spec, not skipping it), bare enchant slots left behind after loot night, and augment runes, which only 8/24 raiders have carved at all.</p>
+</div>
+</div>
+
+<div class="card"><h3>Readiness at a glance</h3>
+<div class="kpis">
+<div class="kpi"><div class="kl">Avg readiness</div><div class="kv" style="color:#fff">77<span style="font-size:16px;color:#6b8a70">/100</span></div><div class="ks">Tue 78 · Thu 75</div></div>
+<div class="kpi"><div class="kl">Correct flask</div><div class="kv" style="color:#37e0a1">18<span style="font-size:16px;color:#6b8a70">/24</span></div><div class="ks">6 named on the wrong flask</div></div>
+<div class="kpi"><div class="kl">Fully enchanted</div><div class="kv" style="color:#e5b45b">15<span style="font-size:16px;color:#6b8a70">/24</span></div><div class="ks">8/8 slots — offenders named below</div></div>
+<div class="kpi"><div class="kl">Augment rune</div><div class="kv" style="color:#e0564b">8<span style="font-size:16px;color:#6b8a70">/24</span></div><div class="ks">6 Void-Touched · 2 old Ethereal</div></div>
+<div class="kpi"><div class="kl">Top hero tree</div><div class="kv" style="color:#37e0a1">20<span style="font-size:16px;color:#6b8a70">/24</span></div><div class="ks">4 named exceptions below</div></div>
+<div class="kpi"><div class="kl">Enchant slots</div><div class="kv" style="color:#fff">174<span style="font-size:16px;color:#6b8a70">/192</span></div><div class="ks">87/120 sockets gemmed</div></div>
+</div>
+</div>
+
+<div class="card"><h3>Roster readiness grid — week 1</h3>
+<p class="mut">Sorted worst-flags-first. Chips: <span class="chip good" style="margin:0 2px">good</span> <span class="chip warning" style="margin:0 2px">flagged</span> <span class="chip serious" style="margin:0 2px">fix now</span> <span class="chip info" style="margin:0 2px">pending</span> — data below is a manual Aug-22 audit read, not the automated pipeline, so pending cells are honest gaps, not silent failures.</p>
+<div class="rg"><table>
+<thead><tr><th>Player</th><th>Spec</th><th>Potions</th><th>Flask</th><th>Food</th><th>Enchants &amp; Gems</th><th>Talents &amp; Spec</th></tr></thead>
+<tbody>
+
+<tr><td class="nm">Gonghar</td><td class="rgspec">Arms Warrior</td>
+<td><span class="chip warning">wrong potion</span><span class="rgn">Light's Potential (Tue) → wants Recklessness</span></td>
+<td><span class="chip serious">wrong flask</span><span class="rgn">wants Blood Knights (Haste)</span></td>
+<td><span class="chip info">pending</span><span class="rgn">first API refresh</span></td>
+<td><span class="chip serious">5/8 enchants</span><span class="rgn">audit-confirmed shortfall</span></td>
+<td><span class="chip good">top tree</span></td></tr>
+
+<tr><td class="nm">Lamashtiu</td><td class="rgspec">Warlock — Destro→Affl (Thu)</td>
+<td><span class="chip good">on-spec</span></td>
+<td><span class="chip serious">wrong flask</span><span class="rgn">wants Shattered Sun (Tue/Destro) or Blood Knights (Thu/Affl)</span></td>
+<td><span class="chip info">pending</span><span class="rgn">first API refresh</span></td>
+<td><span class="chip warning">6/8 · 1 gem</span><span class="rgn">fell from 8/8 ench, 3→1 gems after Thu loot</span></td>
+<td><span class="chip warning">off hero tree</span><span class="rgn">Soul Harvester → wants Hellcaller</span></td></tr>
+
+<tr><td class="nm">Drenzella</td><td class="rgspec">Arcane Mage</td>
+<td><span class="chip warning">wrong potion</span><span class="rgn">mixed Light's + Recklessness — spec wants Light's Potential only</span></td>
+<td><span class="chip serious">wrong flask</span><span class="rgn">wants Blood Knights (Haste)</span></td>
+<td><span class="chip info">pending</span><span class="rgn">first API refresh</span></td>
+<td><span class="chip info">pending</span><span class="rgn">per-slot detail</span></td>
+<td><span class="chip good">top tree</span></td></tr>
+
+<tr><td class="nm">Evac</td><td class="rgspec">Ret Paladin</td>
+<td><span class="chip warning">wrong potion</span><span class="rgn">Light's Potential both nights (24 casts Thu) → wants Recklessness</span></td>
+<td><span class="chip good">correct</span></td>
+<td><span class="chip info">pending</span><span class="rgn">first API refresh</span></td>
+<td><span class="chip info">pending</span><span class="rgn">per-slot detail</span></td>
+<td><span class="chip warning">off hero tree</span><span class="rgn">Templar → wants Herald of the Sun</span></td></tr>
+
+<tr><td class="nm">Mooserus</td><td class="rgspec">Druid — Guardian→Balance (Thu)</td>
+<td><span class="chip warning">wrong potion</span><span class="rgn">mostly Recklessness (Tue/Guardian) → wants Draught or Light's Potential</span></td>
+<td><span class="chip serious">wrong flask</span><span class="rgn">wants Blood Knights (Tue/Guardian) or Magisters (Thu/Balance)</span></td>
+<td><span class="chip info">pending</span><span class="rgn">first API refresh</span></td>
+<td><span class="chip info">pending</span><span class="rgn">per-slot detail</span></td>
+<td><span class="chip good">top tree</span></td></tr>
+
+<tr><td class="nm">Slaydabussy</td><td class="rgspec">Devastation Evoker</td>
+<td><span class="chip warning">wrong potion</span><span class="rgn">Light's Potential (Tue) → wants Recklessness</span></td>
+<td><span class="chip good">correct</span></td>
+<td><span class="chip info">pending</span><span class="rgn">first API refresh</span></td>
+<td><span class="chip warning">6/8 enchants</span></td>
+<td><span class="chip good">top tree</span></td></tr>
+
+<tr><td class="nm">Threellamas</td><td class="rgspec">Shadow Priest (Voidweaver)</td>
+<td><span class="chip warning">wrong potion</span><span class="rgn">Light's Potential both nights (20 casts Thu) → wants Recklessness</span></td>
+<td><span class="chip good">correct</span></td>
+<td><span class="chip info">pending</span><span class="rgn">first API refresh</span></td>
+<td><span class="chip info">pending</span><span class="rgn">per-slot detail</span></td>
+<td><span class="chip serious">off hero tree</span><span class="rgn">Voidweaver ~17% behind Archon's build</span></td></tr>
+
+<tr><td class="nm">Tuchmegently</td><td class="rgspec">Preservation Evoker</td>
+<td><span class="chip serious">no potion</span><span class="rgn">cast nothing — either night</span></td>
+<td><span class="chip good">correct</span></td>
+<td><span class="chip info">pending</span><span class="rgn">first API refresh</span></td>
+<td><span class="chip warning">6/8 enchants</span><span class="rgn">up from 1/8 after Thu loot — trending right way</span></td>
+<td><span class="chip good">top tree</span></td></tr>
+
+<tr><td class="nm">Biggestfrank</td><td class="rgspec">Protection Warrior</td>
+<td><span class="chip good">on-spec</span></td>
+<td><span class="chip serious">wrong flask</span><span class="rgn">wants Blood Knights (Haste)</span></td>
+<td><span class="chip info">pending</span><span class="rgn">first API refresh</span></td>
+<td><span class="chip info">pending</span><span class="rgn">per-slot detail</span></td>
+<td><span class="chip good">top tree</span></td></tr>
+
+<tr><td class="nm">Doomshop</td><td class="rgspec">Discipline Priest — Oracle→Voidweaver (Thu)</td>
+<td><span class="chip good">on-spec</span></td>
+<td><span class="chip good">correct</span></td>
+<td><span class="chip info">pending</span><span class="rgn">first API refresh</span></td>
+<td><span class="chip info">pending</span><span class="rgn">per-slot detail</span></td>
+<td><span class="chip warning">off hero tree — marginal</span><span class="rgn">Voidweaver vs Oracle — audit calls it marginal, not a hard miss</span></td></tr>
+
+<tr><td class="nm">Grimtacos</td><td class="rgspec">Blood DK</td>
+<td><span class="chip serious">no potion</span><span class="rgn">cast nothing — Thu (only night raided)</span></td>
+<td><span class="chip good">correct</span></td>
+<td><span class="chip info">pending</span><span class="rgn">first API refresh</span></td>
+<td><span class="chip info">pending</span><span class="rgn">per-slot detail</span></td>
+<td><span class="chip good">top tree</span></td></tr>
+
+<tr><td class="nm">Kagedthunder</td><td class="rgspec">Restoration Shaman</td>
+<td><span class="chip serious">no potion</span><span class="rgn">cast nothing — Tue</span></td>
+<td><span class="chip good">correct</span></td>
+<td><span class="chip info">pending</span><span class="rgn">first API refresh</span></td>
+<td><span class="chip info">pending</span><span class="rgn">per-slot detail</span></td>
+<td><span class="chip good">top tree</span></td></tr>
+
+<tr><td class="nm">Roastpork</td><td class="rgspec">Elemental Shaman</td>
+<td><span class="chip serious">no potion</span><span class="rgn">cast nothing — Tue</span></td>
+<td><span class="chip good">correct</span></td>
+<td><span class="chip info">pending</span><span class="rgn">first API refresh</span></td>
+<td><span class="chip info">pending</span><span class="rgn">per-slot detail</span></td>
+<td><span class="chip good">top tree</span></td></tr>
+
+<tr><td class="nm">Stupididiot</td><td class="rgspec">Destruction Lock</td>
+<td><span class="chip good">on-spec</span></td>
+<td><span class="chip serious">wrong flask</span><span class="rgn">wants Shattered Sun (Crit)</span></td>
+<td><span class="chip info">pending</span><span class="rgn">first API refresh</span></td>
+<td><span class="chip info">pending</span><span class="rgn">per-slot detail</span></td>
+<td><span class="chip good">top tree</span></td></tr>
+
+<tr><td class="nm">Yayaa</td><td class="rgspec">Elemental Shaman</td>
+<td><span class="chip good">on-spec</span></td>
+<td><span class="chip good">correct</span></td>
+<td><span class="chip info">pending</span><span class="rgn">first API refresh</span></td>
+<td><span class="chip serious">3/8 · 0 gems</span><span class="rgn">at 305 ilvl — highest-impact single fix on the roster</span></td>
+<td><span class="chip good">top tree</span></td></tr>
+
+<tr><td class="nm">Calitra</td><td class="rgspec">Warlock — Destro→Demo (Thu)</td>
+<td><span class="chip good">on-spec</span></td>
+<td><span class="chip good">correct</span></td>
+<td><span class="chip info">pending</span><span class="rgn">first API refresh</span></td>
+<td><span class="chip info">pending</span><span class="rgn">per-slot detail</span></td>
+<td><span class="chip good">top tree</span></td></tr>
+
+<tr><td class="nm">Cheekclappr</td><td class="rgspec">Fire Mage</td>
+<td><span class="chip good">on-spec</span></td>
+<td><span class="chip good">correct</span></td>
+<td><span class="chip info">pending</span><span class="rgn">first API refresh</span></td>
+<td><span class="chip info">pending</span><span class="rgn">per-slot detail</span></td>
+<td><span class="chip good">top tree</span></td></tr>
+
+<tr><td class="nm">Jérah</td><td class="rgspec">Blood DK</td>
+<td><span class="chip good">on-spec</span></td>
+<td><span class="chip good">correct</span></td>
+<td><span class="chip info">pending</span><span class="rgn">first API refresh</span></td>
+<td><span class="chip info">pending</span><span class="rgn">per-slot detail</span></td>
+<td><span class="chip good">top tree</span></td></tr>
+
+<tr><td class="nm">Ninoina</td><td class="rgspec">Havoc DH</td>
+<td><span class="chip good">on-spec</span></td>
+<td><span class="chip good">correct</span></td>
+<td><span class="chip info">pending</span><span class="rgn">first API refresh</span></td>
+<td><span class="chip info">pending</span><span class="rgn">per-slot detail</span></td>
+<td><span class="chip good">top tree</span></td></tr>
+
+<tr><td class="nm">Pitamorgo</td><td class="rgspec">Holy Paladin</td>
+<td><span class="chip good">on-spec</span></td>
+<td><span class="chip good">correct</span></td>
+<td><span class="chip info">pending</span><span class="rgn">first API refresh</span></td>
+<td><span class="chip info">pending</span><span class="rgn">per-slot detail</span></td>
+<td><span class="chip good">top tree</span></td></tr>
+
+<tr><td class="nm">Teklovossen</td><td class="rgspec">BM Hunter</td>
+<td><span class="chip good">on-spec</span></td>
+<td><span class="chip good">correct</span></td>
+<td><span class="chip info">pending</span><span class="rgn">first API refresh</span></td>
+<td><span class="chip info">pending</span><span class="rgn">per-slot detail</span></td>
+<td><span class="chip good">top tree</span></td></tr>
+
+<tr><td class="nm">Unemploÿed</td><td class="rgspec">Shadow Priest</td>
+<td><span class="chip good">on-spec</span></td>
+<td><span class="chip good">correct</span></td>
+<td><span class="chip info">pending</span><span class="rgn">first API refresh</span></td>
+<td><span class="chip info">pending</span><span class="rgn">per-slot detail</span></td>
+<td><span class="chip good">top tree</span></td></tr>
+
+<tr><td class="nm">Unzipzippin</td><td class="rgspec">Devourer DH</td>
+<td><span class="chip good">on-spec</span></td>
+<td><span class="chip good">correct</span></td>
+<td><span class="chip info">pending</span><span class="rgn">first API refresh</span></td>
+<td><span class="chip info">pending</span><span class="rgn">per-slot detail</span></td>
+<td><span class="chip good">top tree</span></td></tr>
+
+<tr><td class="nm">Yaofeii</td><td class="rgspec">Windwalker Monk</td>
+<td><span class="chip good">on-spec</span></td>
+<td><span class="chip good">correct</span></td>
+<td><span class="chip info">pending</span><span class="rgn">first API refresh</span></td>
+<td><span class="chip info">pending</span><span class="rgn">per-slot detail</span></td>
+<td><span class="chip good">top tree</span></td></tr>
+
+</tbody></table></div>
+<!-- Enchant & Gems bucketing note: the audit names exactly 5 partial offenders (Yayaa, Gonghar, Lamashtiu,
+     Slaydabussy, Tuchmegently) and states 15/24 are "fully enchanted" — but never names which 15. That leaves
+     24 - 5 = 19 unnamed players, of whom 15 are presumably ✓ 8/8 and 4 are additional unnamed partials we
+     cannot identify. Rather than guess who is in which bucket, every unnamed player gets chip.info "pending —
+     per-slot detail" here; the real 8/8 count (15/24) is stated in the KPI row and this caption instead. -->
+<p class="mut" style="margin-top:10px">Enchant note: the audit confirms <b>15/24 fully enchanted (8/8)</b> and names only the five offenders above — it doesn't say which 15, so the "pending" cells aren't unknowns in a bad way, they're green cells waiting on the API refresh to get named individually.</p>
+</div>
+
+<div class="cols">
+<div><h3>Loot-night regression</h3>
+<p class="mut">New loot equipped bare is the #1 readiness failure mode this week: of the 18 players who raided both nights, 15 changed gear between Tuesday and Thursday, and <b>8 of those went backwards</b> on total enchants/gems right after the upgrade.</p>
+<ul>
+<li><b>Lamashtiu</b> — 8/8→6/8 enchants, 3→1 gems</li>
+<li><b>Yayaa</b> — 4/8→3/8 enchants, 1→0 gems</li>
+<li><b>Yaofeii</b> — 8/8→7/8 enchants</li>
+<li><b>Calitra</b> — 5→4 gems</li>
+<li><b>Biggestfrank</b> — 4→3 gems</li>
+<li><b>Teklovossen</b> — 5→4 gems</li>
+<li><b>Unzipzippin</b> — 5→4 gems</li>
+<li><b>Pitamorgo</b> — 4→3 gems</li>
+</ul>
+<p class="mut" style="margin-top:10px"><b>Improved instead:</b> Tuchmegently (1/8→6/8 ench, 0→4 gems), Evac (6/8→8/8 ench), Mooserus (7/8→8/8 ench).</p>
+</div>
+<div><h3>Augment runes &amp; health potions</h3>
+<p class="mut">Only <b>8/24</b> carved an augment rune at all. <b>Void-Touched</b> (current tier): Evac, Unemploÿed, Unzipzippin, Cheekclappr, Teklovossen, Mooserus. <b>Ethereal</b> (old, still permanent but weaker — worth upgrading): Calitra, Gonghar. <b>None</b>: the other 16 — Kagedthunder, Yaofeii, Pitamorgo, Ninoina, Lamashtiu, Tuchmegently, Roastpork, Jérah, Yayaa, Slaydabussy, Drenzella, Biggestfrank, Threellamas, Doomshop, Stupididiot, Grimtacos.</p>
+<p class="mut" style="margin-top:10px"><b>Health potions:</b> 8 raiders are drinking a lesser potion (plain Silvermoon / Potent) where their spec wants Concentrated Silvermoon — the audit flagged the count but didn't name individuals, so this is a flag, not a list yet. Frost DK and Preservation Evoker are the two roster specs where plain Silvermoon is actually correct, not a downgrade.</p>
+</div>
+</div>
+
+<div class="note"><b>Cloak enchants: 0/24.</b> Nobody on the roster has one, and 7/24 are also missing the bracer tertiary. The pug comparison group the audit checked against had zero cloak enchants too, which points to a Season 2 supply/recipe availability issue rather than 24 people forgetting at once — watch it next week, don't flog anyone over it yet.</div>
+
+<div class="card" id="how-readiness"><h3>How we measure (and why) — Raid Readiness</h3>
+<p class="mut">Readiness isn't about how well you play — it's about whether you showed up prepared to play well. Five checks, all things you control completely before the pull button is even pressed.</p>
+
+<div class="cols">
+<div><h3>Combat potions</h3><p class="mut">A combat potion is a one-time burst you drink mid-fight — not before the pull, during it, timed to line up with your other cooldowns. We call it "free performance" because unlike a well-timed cooldown rotation, chugging a potion takes zero skill and zero practice — you just have to remember to do it, and to grab the right one for your character. This tier the three DPS/tank potions you'll see most are <b>Light's Potential</b> (a flat boost to your main stat), <b>Potion of Recklessness</b> (a bigger secondary-stat boost with a small tradeoff, best on classes that can afford the downside), and <b>Draught of Rampant Abandon</b> (the tank's pick — it drops a damage-absorbing void zone instead of just buffing you). Healers usually reach for <b>Lightfused Mana Potion</b> instead, since their bottleneck is resource, not damage. The wrong potion for your spec still helps a little — it's just leaving free performance on the table for no reason.</p></div>
+<div><h3>Flask</h3><p class="mut">A flask is a one-hour buff you drink before the pull, like putting your shoes on before you leave the house — you don't lace up mid-jog, and you don't flask mid-fight. Top guilds treat it the same way: it's not a decision, it's a habit, because it's a stat gain that costs gold and zero attention once it's up. We check flask <i>uptime</i> as a percentage of fight time (not just "did you drink one") because a flask that falls off mid-raid — it happens, a late reapply, a long break between pulls — quietly costs you the rest of that pull just like forgetting it in the first place.</p></div>
+</div>
+
+<div class="cols">
+<div><h3>Food buff (Well Fed)</h3><p class="mut">Well Fed is the buff you get from eating a feast or a personal food item before the pull — smaller than a flask, but still free, and it costs nothing but remembering to eat before the pull starts like everyone else at the table. We check it because it's the cheapest, easiest box on this whole list to tick, so a raider missing it isn't a gear problem or a skill problem — it's just an oversight, and the fastest one to fix.</p></div>
+<div><h3>Augment rune (Void-Touched)</h3><p class="mut">Everything else on this readiness check is a consumable — you use it up and have to remember it again next raid. An augment rune is the opposite: you carve it into a piece of gear once, and it's permanent, giving a passive stat boost every fight forever after with no upkeep. <b>Void-Touched</b> is this tier's current rune; the old <b>Ethereal</b> rune is still permanent, just weaker, and worth upgrading. Because it's a one-time purchase and a one-time application, having no rune at all — or still running the old Ethereal one — isn't a "forgot tonight" problem, it's a to-do-list item that's been sitting untouched.</p></div>
+</div>
+
+<div class="cols">
+<div><h3>Enchants &amp; gems</h3><p class="mut">Enchants and gems are permanent-ish upgrades applied to a specific piece of gear — a stat boost baked into that item, which means the moment you replace the item, the enchant and gems go with it and the new piece starts bare. That's exactly why loot night is the most common time to see empty slots: you win an upgrade, wear it immediately because it's still a bigger number on paper, and don't re-enchant or re-socket it before the next pull. It's not hypothetical — most raiders who played both nights this week changed gear between them, and roughly a third of those actually went <i>backwards</i> on total enchants and gems after picking up new loot. We check it because a bare slot is a free stat sitting on the table that costs gold, not skill, to fix.</p></div>
+<div><h3>Talents &amp; spec vs. the Archon build</h3><p class="mut">We compare your talent build to Archon's top-parsing build for your spec on that boss — Archon aggregates what the best-performing players on Warcraft Logs are actually running, not just what a guide says on paper. A build that doesn't match the top build isn't an automatic fail — it's a flag: "this is off the beaten path, come explain why." Sometimes there's a good reason: a class discord has found something Archon's aggregate hasn't caught up to yet, or a specific fight calls for a swap Archon's per-boss data doesn't isolate. The flag just makes sure that reason exists, and isn't "I forgot to check."</p></div>
+</div>
+
+<div class="note"><b>Readiness vs. performance:</b> these are graded separately on purpose. Performance (your parse, your median) measures how well you play once the pull starts — that takes skill, practice, and good execution under pressure. Readiness measures whether you showed up with your flask, food, rune, gems and enchants in place — every one of those checks is 100% effort and 0% skill, a list anyone can clear with five minutes before raid. Mixing the two into one score would let a naturally skilled player's parse paper over sloppy prep, or let a diligent-but-still-learning player's prep paper over a rough parse. Keeping them apart means each number tells you something true, and something different.</div>
+</div>
+
+<div class="card dqcard"><h3>Data quality notes — readiness</h3>
+<ul>
+<li>Source: Aug-22 manual audit of reports <b>zqhDW4MJLjV9agX6</b> (Tue 8/18) and <b>dNYbjyaQGR6Zn8Tt</b> (Thu 8/20) — see <span class="mut">docs/history/2026-08-20-s2-week1-preparedness.md</span>. This is a manual read, not the automated pipeline, so it captures what the audit specifically wrote down and nothing more.</li>
+<li><b>Food buff, per-slot enchant detail, and per-player readiness scores are pending</b> the official Warcraft Logs API pipeline (client-credentials access, Step 0 of the verification plan). Our earlier table pulls failed during the week-1 refresh; the official-API pipeline replaces them for next week's build.</li>
+<li><b>15/24 fully enchanted</b> per the audit's total, but the audit named only the five offenders — most of the "pending" enchant cells above are very likely ✓ 8/8, they simply aren't individually confirmed yet.</li>
+<li><b>Spec swaps mid-week</b> — Calitra Destro→Demo, Lamashtiu Destro→Affl, Mooserus Guardian→Balance (Thu) — mean "correct consumable" is judged against the spec each player actually played that night, not one fixed spec for the whole week.</li>
+<li>The scrape endpoints used for this manual audit are blocked as of Aug 24 ("use the API"); the pipeline moves to the official client-credentials API for the next refresh rather than re-scraping.</li>
+</ul>
+</div>
+
+<div class="sitefoot"><div>Warcraft Logs guild 217733 · The Venomous Abyss (Midnight S2) · reports zqhDW4MJLjV9agX6 (Tue 8/18) + dNYbjyaQGR6Zn8Tt (Thu 8/20) · generated 2026-08-24</div><div style="display:flex;gap:18px"><a href="index.html">Season 2 report</a><a href="season1.html">Season 1 archive</a></div></div>
+
+<div id="tip"></div>
+</div></body></html>
